@@ -23,12 +23,18 @@ let lockedDays = JSON.parse(localStorage.getItem("lockedDays") || "{}");
 let bestScores = JSON.parse(localStorage.getItem("bestScores") || "{}");
 
 const colorBoxes = {
-  "1": "🟥", // red box for 1
-  "2": "⬜", // white box for 2
-  "3": "🟦", // blue box for 3
-  "4": "🟨", // yellow box for 4
-  "5": "🟩", // green box for 5
-  "6": "⬛", // black box for 6
+  "1": "🟥",   // red box
+  "2": "⬜",   // white box
+  "3": "🟦",   // blue box
+  "4": "🟨",   // yellow box
+  "5": "🟩",   // green box
+  "6": "⬛",   // black box
+  "7": "🟧",   // orange box
+  "8": "🩷",   // pink (heart emoji used for pink)
+  "9": "🔷",   // turquoise/diamond blue
+  "10": "🟪",  // purple box
+  "11": "⬜",  // gray/white substitute (no perfect gray box)
+  "12": "🟩",  // lighter green fallback (same as 5 for now)
 };
 
 function expressionToShareable(expr) {
