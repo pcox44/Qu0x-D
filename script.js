@@ -92,10 +92,16 @@ function mulberry32(seed) {
 }
 
 function generatePuzzle(day) {
-  const seed = getSeedFromDay(day);
-  const rand = mulberry32(seed);
-  target = Math.floor(rand() * 100) + 1;
-  diceValues = Array.from({ length: 5 }, () => Math.floor(rand() * diceType) + 1);
+  const puzzle = staticPuzzles[day];
+  if (puzzle) {
+    diceValues = puzzle.dice;
+    target = puzzle.target;
+  } else {
+    // fallback or procedurally generate
+    const seed = day + 1;
+    diceValues = generateDice(seed);
+    target = generateTarget(diceValues, seed);
+  }
 }
 
 
