@@ -375,72 +375,58 @@ function animateQu0x() {
 
 function renderGame(day) {
   currentDay = day;
-
-  generatePuzzle(day);
-  renderDice();
-
   const key = getKey(day, diceType);
-  if (lockedDays[key] && lockedDays[key].expression) {
 
-    expressionBox.innerText = lockedDays[day].expression;
+  generatePuzzle(day); // sets diceValues + target
+
+  usedDice = []; // Reset dice usage on rerender
+
+  if (lockedDays[key] && lockedDays[key].expression) {
+    expressionBox.innerText = lockedDays[key].expression;
     evaluateExpression();
   } else {
     expressionBox.innerText = "";
     evaluationBox.innerText = "?";
   }
 
+  renderDice(); // 🟢 Always rerender dice after state setup
+
   targetBox.innerText = `Target: ${target}`;
   gameNumberDate.innerText = `Game #${day + 1} (${getDateFromDayIndex(day)})`;
 
-  if (bestScores[day] !== undefined) {
-    dailyBestScoreBox.innerText = `${bestScores[day]}`;
+  if (bestScores[key] !== undefined) {
+    dailyBestScoreBox.innerText = `${bestScores[key]}`;
   } else {
     dailyBestScoreBox.innerText = "N/A";
   }
 
-  const completedKeys = Object.keys(bestScores).filter(key => key.endsWith(`-d${diceType}`) && bestScores[key] === 0);
+  const completedKeys = Object.keys(bestScores).filter(k => k.endsWith(`-d${diceType}`) && bestScores[k] === 0);
   completionRatioBox.innerText = `${completedKeys.length}/${maxDay + 1}`;
 
   const totalScore = Object.entries(bestScores)
-  .filter(([k]) => k.endsWith(`-d${diceType}`))
-  .reduce((sum, [, val]) => sum + val, 0);
+    .filter(([k]) => k.endsWith(`-d${diceType}`))
+    .reduce((sum, [, val]) => sum + val, 0);
 
   masterScoreBox.innerText = completedKeys.length === (maxDay + 1) ? `${totalScore}` : "N/A";
 
-
-  const totalScore = Object.values(bestScores).reduce((a, b) => a + b, 0);
-  const totalGames = maxDay + 1;
-
-  if (Object.keys(bestScores).length === totalGames) {
-    masterScoreBox.innerText = `${totalScore}`;
-  } else {
-    masterScoreBox.innerText = "N/A";
-  }
-
-
-  const locked = isLocked(day);
+  const locked = isLocked(day, diceType);
 
   expressionBox.style.pointerEvents = locked ? "none" : "auto";
   submitBtn.disabled = locked;
 
-  // Disable or enable all operator buttons
   buttonGrid.querySelectorAll("button").forEach(btn => {
     btn.disabled = locked;
-    if (locked) {
-      btn.classList.add("disabled");
-    } else {
-      btn.classList.remove("disabled");
-    }
+    btn.classList.toggle("disabled", locked);
   });
 
-  // Hide or show Share button
   const shareBtn = document.getElementById("shareBtn");
-  if (locked && lockedDays[day]?.expression) {
+  if (locked && lockedDays[key]?.expression) {
     shareBtn.classList.remove("hidden");
   } else {
     shareBtn.classList.add("hidden");
   }
 }
+
 
 document.getElementById("prevDay").onclick = () => {
   if (currentDay > 0) {
