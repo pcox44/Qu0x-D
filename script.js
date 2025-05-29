@@ -87,7 +87,7 @@ const staticPuzzles = [
   { dice: [4, 5, 5, 3, 2], target: 52 },
 ];
 
-// Optional: use mulberry32 PRNG for dynamic puzzles from day 10 onward
+// Optional: use mulberry32 PRNG for dynamic puzzles from day 11 onward
 function mulberry32(seed) {
   return function() {
     let t = seed += 0x6D2B79F5;
@@ -97,18 +97,19 @@ function mulberry32(seed) {
   };
 }
 
+// Step 2: Modify generatePuzzle to use static for first 11 days, dynamic for others
 function generatePuzzle(day) {
-  const puzzle = staticPuzzles[day];
-  if (puzzle) {
-    diceValues = puzzle.dice;
-    target = puzzle.target;
+  if (day < 11) {
+    diceValues = staticPuzzles[day].dice.slice();  // clone array
+    target = staticPuzzles[day].target;
   } else {
-    // fallback or procedurally generate
-    const seed = day + 1;
-    diceValues = generateDice(seed);
-    target = generateTarget(diceValues, seed);
+    // Use current diceType selected by the dropdown
+    const rand = mulberry32(day + diceType);  // add diceType to seed to diversify
+    diceValues = Array.from({ length: 5 }, () => Math.floor(rand() * diceType) + 1);
+    target = Math.floor(rand() * 100) + 1;
   }
 }
+
 
 
 function renderDice() {
@@ -310,9 +311,9 @@ function isLocked(day) {
 }
 
 diceTypeSelector.addEventListener("change", () => {
-  diceType = parseInt(diceTypeSelector.value, 10);
+  diceType = parseInt(diceTypeSelector.value, 10);  // get updated value
   usedDice = [];
-  renderGame(currentDay);
+  renderGame(currentDay);  // rerun game with new die range
 });
 
 function submit() {
