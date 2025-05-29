@@ -76,21 +76,6 @@ function getDateFromDayIndex(index) {
   return date.toISOString().slice(0, 10);
 }
 
-// Step 1: Define the static puzzles for the first 10 days
-const staticPuzzles = [
-  { dice: [3, 2, 5, 1, 1], target: 82 },
-  { dice: [6, 3, 2, 4, 3], target: 46 },
-  { dice: [2, 6, 2, 5, 4], target: 93 },
-  { dice: [1, 6, 6, 3, 3], target: 44 },
-  { dice: [1, 5, 4, 3, 2], target: 76 },
-  { dice: [4, 2, 6, 3, 5], target: 4 },
-  { dice: [1, 6, 4, 4, 3], target: 4 },
-  { dice: [6,3, 1, 6, 1], target: 19 },
-  { dice: [3, 1, 1, 3, 5], target: 73 },
-  { dice: [3, 1, 3, 2, 6], target: 31 },
-  { dice: [4, 5, 5, 3, 2], target: 52 },
-];
-
 // Optional: use mulberry32 PRNG for dynamic puzzles from day 11 onward
 function mulberry32(seed) {
   return function() {
@@ -102,7 +87,7 @@ function mulberry32(seed) {
 }
 
 function generatePuzzle(day) {
-  if (day < 11) {
+  if (day <= 0) {
     diceValues = staticPuzzles[day].dice.slice();  // Clone to avoid mutation
     target = staticPuzzles[day].target;
   } else {
