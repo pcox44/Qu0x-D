@@ -22,6 +22,10 @@ let target = null;
 let lockedDays = JSON.parse(localStorage.getItem("lockedDays") || "{}");
 let bestScores = JSON.parse(localStorage.getItem("bestScores") || "{}");
 
+function getKey(day, diceType) {
+  return `${day}-d${diceType}`;
+}
+
 const colorBoxes = {
   "1": "🟥",   // red box
   "2": "⬜",   // white box
@@ -97,16 +101,16 @@ function mulberry32(seed) {
   };
 }
 
-// Step 2: Modify generatePuzzle to use static for first 11 days, dynamic for others
 function generatePuzzle(day) {
   if (day < 11) {
-    diceValues = staticPuzzles[day].dice.slice();  // clone array
+    diceValues = staticPuzzles[day].dice.slice();  // Clone to avoid mutation
     target = staticPuzzles[day].target;
   } else {
-    // Use current diceType selected by the dropdown
-    const rand = mulberry32(day + diceType);  // add diceType to seed to diversify
-    diceValues = Array.from({ length: 5 }, () => Math.floor(rand() * diceType) + 1);
+    const rand = mulberry32(day); // Only day-based seed
     target = Math.floor(rand() * 100) + 1;
+
+    const diceRand = mulberry32(day + diceType); // Dice type changes the actual dice, but not the target
+    diceValues = Array.from({ length: 5 }, () => Math.floor(diceRand() * diceType) + 1);
   }
 }
 
@@ -124,7 +128,7 @@ function renderDice() {
       die.classList.add("faded");
     }
     die.onclick = () => {
-      if (isLocked(currentDay)) return;
+      if (isLocked(currentDay, diceType)) return;
       if (usedDice.includes(idx)) return;
       usedDice.push(idx);
       expressionBox.innerText += val;
@@ -282,7 +286,7 @@ function buildButtons() {
     const btn = document.createElement("button");
     btn.innerText = op;
     btn.onclick = () => {
-      if (isLocked(currentDay)) return;
+      if (isLocked(currentDay, diceType)) return;
       if (op === "Back") {
         let expr = expressionBox.innerText;
         if (expr.length === 0) return;
@@ -306,8 +310,9 @@ function buildButtons() {
   });
 }
 
-function isLocked(day) {
-  return lockedDays[day]?.score === 0;
+function isLocked(day, diceType) {
+  const key = getKey(day, diceType);
+  return lockedDays[key]?.score === 0;
 }
 
 diceTypeSelector.addEventListener("change", () => {
@@ -317,7 +322,7 @@ diceTypeSelector.addEventListener("change", () => {
 });
 
 function submit() {
-  if (isLocked(currentDay)) return;
+  if (isLocked(currentDay, diceType)) return;
 
   const result = evaluationBox.innerText;
   if (result === "?") {
@@ -334,10 +339,20 @@ function submit() {
   }
 
   const score = Math.abs(Number(result) - target);
-  if (!(currentDay in bestScores) || score < bestScores[currentDay]) {
-    bestScores[currentDay] = score;
-    localStorage.setItem("bestScores", JSON.stringify(bestScores));
-  }
+  const key = getKey(currentDay, diceType);
+
+  if (!(key in bestScores) || score < bestScores[key]) {
+  bestScores[key] = score;
+  localStorage.setItem("bestScores", JSON.stringify(bestScores));
+}
+
+if (score === 0) {
+  lockedDays[key] = { score, expression: expressionBox.innerText };
+  localStorage.setItem("lockedDays", JSON.stringify(lockedDays));
+  animateQu0x();
+  document.getElementById("shareBtn").classList.remove("hidden");
+}
+
 
  if (score === 0) {
   lockedDays[currentDay] = { score, expression: expressionBox.innerText };
@@ -364,7 +379,9 @@ function renderGame(day) {
   generatePuzzle(day);
   renderDice();
 
-  if (lockedDays[day] && lockedDays[day].expression) {
+  const key = getKey(day, diceType);
+  if (lockedDays[key] && lockedDays[key].expression) {
+
     expressionBox.innerText = lockedDays[day].expression;
     evaluateExpression();
   } else {
@@ -381,8 +398,15 @@ function renderGame(day) {
     dailyBestScoreBox.innerText = "N/A";
   }
 
-  const completedDays = Object.values(bestScores).filter(score => score === 0).length;
-  completionRatioBox.innerText = `${completedDays}/${maxDay + 1}`;
+  const completedKeys = Object.keys(bestScores).filter(key => key.endsWith(`-d${diceType}`) && bestScores[key] === 0);
+  completionRatioBox.innerText = `${completedKeys.length}/${maxDay + 1}`;
+
+  const totalScore = Object.entries(bestScores)
+  .filter(([k]) => k.endsWith(`-d${diceType}`))
+  .reduce((sum, [, val]) => sum + val, 0);
+
+  masterScoreBox.innerText = completedKeys.length === (maxDay + 1) ? `${totalScore}` : "N/A";
+
 
   const totalScore = Object.values(bestScores).reduce((a, b) => a + b, 0);
   const totalGames = maxDay + 1;
