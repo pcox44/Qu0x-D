@@ -19,8 +19,8 @@ let maxDay = getDayIndex(new Date());
 let usedDice = [];
 let diceValues = [];
 let target = null;
-let lockedDays = JSON.parse(localStorage.getItem("lockedDays") || "{}");
-let bestScores = JSON.parse(localStorage.getItem("bestScores") || "{}");
+let lockedDays = JSON.parse(localStorage.getItem("DlockedDays") || "{}");
+let bestScores = JSON.parse(localStorage.getItem("DbestScores") || "{}");
 
 function getKey(day, diceType) {
   return `${day}-d${diceType}`;
@@ -348,7 +348,7 @@ function submit() {
 
 if (score === 0) {
   lockedDays[key] = { score, expression: expressionBox.innerText };
-  localStorage.setItem("lockedDays", JSON.stringify(lockedDays));
+  localStorage.setItem("DlockedDays", JSON.stringify(lockedDays));
   animateQu0x();
   document.getElementById("shareBtn").classList.remove("hidden");
 }
