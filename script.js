@@ -87,7 +87,7 @@ function mulberry32(seed) {
 }
 
 function generatePuzzle(day) {
-  if (day <= 0) {
+  if (day < 0) {
     diceValues = staticPuzzles[day].dice.slice();  // Clone to avoid mutation
     target = staticPuzzles[day].target;
   } else {
