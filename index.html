@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Qu0x!</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* Added styles for the top bar layout */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .top-bar h1 {
+      margin: 0;
+      flex: 1;
+      text-align: left;
+    }
+
+    #gameNumberDate {
+      flex: 1;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      user-select: none;
+    }
+
+    .nav-controls {
+      flex: 1;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <h1>Qu0x!</h1>
+  <div id="gameNumberDate"><!-- JS will populate this --></div>  
+    <div class="nav-controls">
+      <button id="prevDay">◀</button>
+      <select id="gameDropdown"></select>
+      <button id="nextDay">▶</button>
+    </div>
+  </div>
+
+<div class="instructions">
+  <ul>
+    <li><strong>Use each of the 5 dice </strong> exactly once to build an expression to get as close as possible to the <strong>target</strong>.</li>
+    <li><strong>Allowed operations:</strong> +, -, <span class="operator">×</span>, <span class="operator">÷</span>, ^ (exponent), ! (factorial)</li>
+    <li><strong>Score = |Target − Result|.</strong> A score of 0 earns a <span class="qu0x">Qu0x!</span></li>
+  </ul>
+</div>
+
+  <div id="gameHeader">
+    <!-- Removed gameNumberDate from here -->
+    <div class="target-box" id="targetBox">Target: ???</div>
+  </div>
+
+  <div id="qu0xAnimation" class="hidden">🎉🎉 Qu0x! 🎉🎉</div>
+
+  <button id="shareBtn" class="hidden">Share Your Qu0x!</button>
+  
+  <div class="dice-container" id="diceContainer"></div>
+
+  <div class="expression-section">
+    <div id="expressionBox"></div>
+    <div id="equalsSign">=</div>
+    <div id="evaluationBox">?</div>
+  </div>
+
+  <div class="buttons" id="buttonGrid"></div>
+  
+
+  <div id="submitArea">
+    <button id="submitBtn" class="submit">Submit</button>
+  </div>
+
+  <div class="scoreboard">
+    <p><strong>Daily Best Score:</strong> <span id="dailyBestScore">N/A</span></p>
+    <p><strong>Qu0x! Completion:</strong> <span id="completionRatio">0/0</span></p>
+    <p><strong>Qu0x! Master Score:</strong> <span id="masterScore">N/A</span></p>
+  </div>
+
+ 
+   <button
+  onclick="window.open('https://pcox44.github.io/Qu0x2/', '_blank')"
+  style="margin: 10px; padding: 10px 20px; font-size: 1.1em; background-color: purple; color: #fff; border-radius: 8px; border: 2px solid black; cursor: pointer;">
+  Play Qu0x!+
+</button>
+
+
+ 
+
+  <button
+  onclick="window.open('https://pcox44.github.io/Qu0x100', '_blank')"
+  style="background-color: hotpink; color: white; padding: 12px 24px; font-size: 1.1em; border: 2px solid black; border-radius: 8px; cursor: pointer;">
+  Play Qu0x!100
+</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
