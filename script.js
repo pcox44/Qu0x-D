@@ -11,7 +11,7 @@ const masterScoreBox = document.getElementById("masterScore");
 const gameNumberDate = document.getElementById("gameNumberDate");
 const qu0xAnimation = document.getElementById("qu0xAnimation");
 const diceTypeSelector = document.getElementById("diceType"); // assumes dropdown exists in HTML
-let diceType = 6; // default to D6 on page load
+let diceType = 8; // default to D6 on page load
 
 let currentDate = new Date();
 let currentDay = getDayIndex(currentDate);
