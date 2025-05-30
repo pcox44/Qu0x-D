@@ -87,6 +87,10 @@ function mulberry32(seed) {
   };
 }
 
+function randInt(randFn, min, max) {
+  return Math.floor(randFn() * (max - min + 1)) + min;
+}
+
 function generatePuzzle(day) {
   if (day < 0) {
     diceValues = staticPuzzles[day].dice.slice();  // Clone to avoid mutation
@@ -96,7 +100,7 @@ function generatePuzzle(day) {
     target = Math.floor(rand() * 100) + 1;
 
     const diceRand = mulberry32(day + diceType); // Dice type changes the actual dice, but not the target
-    diceValues = Array.from({ length: 5 }, () => Math.floor(diceRand() * diceType) + 1);
+    diceValues = Array.from({ length: 5 }, () => randInt(diceRand, 1, diceType));
   }
 }
 
