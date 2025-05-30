@@ -430,25 +430,34 @@ document.getElementById("nextDay").onclick = () => {
   }
 };
 
+function hasStarsForDay(day) {
+  // Check that lockedDays for d8, d10, d12 exist and have score === 0
+  const diceTypes = [8, 10, 12];
+  return diceTypes.every(diceType => {
+    const key = `${day}-d${diceType}`;
+    return lockedDays[key] && lockedDays[key].score === 0;
+  });
+}
+
 function populateDropdown() {
   dropdown.innerHTML = "";
   for (let i = 0; i <= maxDay; i++) {
     const option = document.createElement("option");
     option.value = i;
-    
-    // Option text, you can customize with emojis or formatting
+
     option.text = `Game #${i + 1}`;
-    
-    // Mark locked games with a star emoji in option text
-    if (lockedDays[i] && lockedDays[i].score === 0) {
+
+    // Add star only if D8, D10, and D12 are done for this day
+    if (hasStarsForDay(i)) {
       option.text = "⭐ " + option.text;
     }
 
     dropdown.appendChild(option);
   }
-  // Set the dropdown value to the currentDay so UI matches the current game
+
   dropdown.value = currentDay;
 }
+
 
 // Add event listener to handle selection change
 dropdown.addEventListener("change", (e) => {
