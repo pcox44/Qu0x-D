@@ -140,7 +140,7 @@ function getDieStyle(val) {
     11: "color:red; background:gray;",
     12: "color:black; background:limegreen;",
   };
-  const border = "border: 4.2px solid black; border-radius: 8px; padding: 10px; margin: 5px;";
+  const border = "border: 4.2px solid black; border-radius: 8px; padding: 5px; margin: 5px;";
   return (styles[val] || "color:black; background:white;") + border;
 }
 
