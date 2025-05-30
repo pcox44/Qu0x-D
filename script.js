@@ -19,8 +19,9 @@ let maxDay = getDayIndex(new Date());
 let usedDice = [];
 let diceValues = [];
 let target = null;
-let lockedDays = JSON.parse(localStorage.getItem("DlockedDays") || "{}");
-let bestScores = JSON.parse(localStorage.getItem("DbestScores") || "{}");
+let lockedDays = JSON.parse(localStorage.getItem("Qu0xLockedDays") || "{}");
+let bestScores = JSON.parse(localStorage.getItem("Qu0xBestScores") || "{}");
+
 
 function getKey(day, diceType) {
   return `${day}-d${diceType}`;
@@ -139,7 +140,7 @@ function getDieStyle(val) {
     11: "color:red; background:gray;",
     12: "color:black; background:limegreen;",
   };
-  const border = "border: 2px solid black; border-radius: 6px; padding: 10px; margin: 5px;";
+  const border = "border: 4.2px solid black; border-radius: 8px; padding: 10px; margin: 5px;";
   return (styles[val] || "color:black; background:white;") + border;
 }
 
@@ -328,12 +329,12 @@ function submit() {
 
   if (!(key in bestScores) || score < bestScores[key]) {
   bestScores[key] = score;
-  localStorage.setItem("bestScores", JSON.stringify(bestScores));
+  localStorage.setItem("Qu0xBestScores", JSON.stringify(bestScores));
 }
 
 if (score === 0) {
   lockedDays[key] = { score, expression: expressionBox.innerText };
-  localStorage.setItem("DlockedDays", JSON.stringify(lockedDays));
+  localStorage.setItem("Qu0xLockedDays", JSON.stringify(lockedDays));
   animateQu0x();
   document.getElementById("shareBtn").classList.remove("hidden");
 }
@@ -341,7 +342,7 @@ if (score === 0) {
 
  if (score === 0) {
   lockedDays[currentDay] = { score, expression: expressionBox.innerText };
-  localStorage.setItem("lockedDays", JSON.stringify(lockedDays));
+  localStorage.setItem("Qu0xLockedDays", JSON.stringify(lockedDays));
   animateQu0x();
 
   // ✅ Show the Share button
